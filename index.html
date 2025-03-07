@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game 4x4 with Images</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .game-container {
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-gap: 10px;
+            margin-top: 20px;
+        }
+        .card {
+            width: 100px;
+            height: 100px;
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        .card.flipped img {
+            display: block;
+        }
+        .card.flipped {
+            background-color: #fff;
+            transform: rotateY(180deg);
+        }
+        .card.matched {
+            background-color: #fff;
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Memory Game</h1>
+        <div id="grid" class="grid"></div>
+        <p>Moves: <span id="moves">0</span></p>
+        <button onclick="resetGame()">Reset Game</button>
+    </div>
+
+    <script>
+        const grid = document.getElementById('grid');
+        const movesDisplay = document.getElementById('moves');
+        let cards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moves = 0;
+
+        // Array of 8 image URLs (each appears twice)
+        const imageUrls = [
+            'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', // House
+            'https://images.unsplash.com/photo-1600585154340-be6161a56a0c',
+            'https://images.unsplash.com/photo-1518791841217-8f162f1e1131', // Cat
+            'https://images.unsplash.com/photo-1518791841217-8f162f1e1131',
+            'https://images.unsplash.com/photo-1533738363-b7f9aef128ce', // Dog
+            'https://images.unsplash.com/photo-1533738363-b7f9aef128ce',
+            'https://images.unsplash.com/photo-1508138221679-760a23a2285b', // Flower
+            'https://images.unsplash.com/photo-1508138221679-760a23a2285b',
+            'https://images.unsplash.com/photo-1472214103451-9374bd1c798e', // Mountain
+            'https://images.unsplash.com/photo-1472214103451-9374bd1c798e',
+            'https://images.unsplash.com/photo-1519681393784-d120267933ba', // Lake
+            'https://images.unsplash.com/photo-1519681393784-d120267933ba',
+            'https://images.unsplash.com/photo-1494545261862-d81d416fba7b', // Bird
+            'https://images.unsplash.com/photo-1494545261862-d81d416fba7b',
+            'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', // Beach
+            'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'
+        ];
+
+        // Initialize game
+        function initializeGame() {
+            cards = imageUrls.sort(() => Math.random() - 0.5); // Shuffle array
+            grid.innerHTML = '';
+            moves = 0;
+            movesDisplay.textContent = moves;
+            matchedPairs = 0;
+            flippedCards = [];
+
+            // Generate card elements
+            cards.forEach((url, index) => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.index = index;
+                card.dataset.value = url; // Use URL as the value to match
+
+                const img = document.createElement('img');
+                img.src = url;
+                card.appendChild(img);
+
+                card.addEventListener('click', flipCard);
+                grid.appendChild(card);
+            });
+        }
+
+        // Handle card flip
+        function flipCard() {
+            const card = this;
+            if (flippedCards.length < 2 && !card.classList.contains('flipped') && !card.classList.contains('matched')) {
+                card.classList.add('flipped');
+                flippedCards.push(card);
+                moves++;
+                movesDisplay.textContent = moves;
+
+                if (flippedCards.length === 2) {
+                    checkMatch();
+                }
+            }
+        }
+
+        // Check if flipped cards match
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            if (card1.dataset.value === card2.dataset.value) {
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matchedPairs++;
+                flippedCards = [];
+                if (matchedPairs === 8) {
+                    setTimeout(() => alert('You won! Moves: ' + moves), 500);
+                }
+            } else {
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    flippedCards = [];
+                }, 1000);
+            }
+        }
+
+        // Reset the game
+        function resetGame() {
+            initializeGame();
+        }
+
+        // Start the game
+        initializeGame();
+    </script>
+</body>
+</html>
