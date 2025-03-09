@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Game 8x4 - Mobile Friendly</title>
+    <title>Memory Game 8x4 - Fully Responsive</title>
     <style>
         body {
             display: flex;
@@ -17,21 +17,22 @@
         .game-container {
             text-align: center;
             padding: 15px;
-            width: 100%;
-            max-width: 400px; /* Cap width for mobile and smaller desktop */
+            width: 90%; /* Flexible width for all devices */
+            max-width: 400px; /* Soft cap for very wide screens */
             box-sizing: border-box;
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(4, 22vw);
-            grid-template-rows: repeat(8, 22vw);
+            grid-template-columns: repeat(4, 1fr); /* Equal fractions of available width */
+            grid-template-rows: repeat(8, auto); /* Auto height based on content */
             grid-gap: 5px;
             margin: 20px auto 0; /* Center the grid */
-            max-width: 100%; /* Ensure it fits within container */
+            width: 100%; /* Full width of container */
         }
         .card {
             width: 100%;
-            height: 100%;
+            height: 0;
+            padding-bottom: 100%; /* Maintain 1:1 aspect ratio */
             background-color: #333;
             display: flex;
             justify-content: center;
@@ -41,6 +42,7 @@
             transform-style: preserve-3d;
             position: relative;
             border-radius: 5px;
+            overflow: hidden; /* Ensure image stays within bounds */
         }
         .card img {
             width: 100%;
@@ -48,6 +50,9 @@
             object-fit: cover;
             display: none;
             border-radius: 5px;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
         .card.flipped img {
             display: block;
@@ -66,20 +71,14 @@
         /* Adjust for very small screens */
         @media (max-width: 320px) {
             .grid {
-                grid-template-columns: repeat(4, 20vw);
-                grid-template-rows: repeat(8, 20vw);
                 grid-gap: 3px;
             }
         }
-        /* Larger screens (desktop) */
+        /* Larger screens (optional refinement) */
         @media (min-width: 600px) {
-            .grid {
-                grid-template-columns: repeat(4, 75px); /* Fixed size for desktop */
-                grid-template-rows: repeat(8, 75px);
-                grid-gap: 8px;
-            }
-            .game-container {
-                max-width: 320px; /* Fixed width for centered desktop layout */
+            .card {
+                min-width: 75px;
+                min-height: 75px;
             }
         }
     </style>
