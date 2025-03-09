@@ -3,29 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Game 6x6 with Images</title>
+    <title>Memory Game 8x4 - Mobile Friendly</title>
     <style>
         body {
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start; /* Start from top for scrolling */
+            min-height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
         .game-container {
             text-align: center;
+            padding: 15px; /* Reduced padding for mobile */
+            width: 100%;
+            box-sizing: border-box;
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(6, 50px); /* 6 columns, 50px each */
-            grid-gap: 5px; /* Reduced gap for smaller cards */
-            margin-top: 20px;
+            grid-template-columns: repeat(4, 22vw); /* 4 columns, viewport-based */
+            grid-template-rows: repeat(8, 22vw); /* 8 rows, viewport-based */
+            grid-gap: 5px; /* Smaller gap for mobile */
+            margin: 20px auto 0; /* Center horizontally */
+            max-width: 400px; /* Cap width for larger screens */
         }
         .card {
-            width: 50px; /* Smaller size */
-            height: 50px;
+            width: 100%; /* Full width of grid cell */
+            height: 100%; /* Full height of grid cell */
             background-color: #333;
             display: flex;
             justify-content: center;
@@ -34,12 +39,14 @@
             transition: transform 0.3s;
             transform-style: preserve-3d;
             position: relative;
+            border-radius: 5px; /* Slight rounding for touch friendliness */
         }
         .card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: none;
+            border-radius: 5px;
         }
         .card.flipped img {
             display: block;
@@ -51,6 +58,26 @@
         .card.matched {
             background-color: #fff;
             transform: rotateY(180deg);
+        }
+        /* Ensure touch feedback */
+        .card:active {
+            transform: scale(0.95); /* Slight shrink on tap */
+        }
+        /* Adjust for very small screens */
+        @media (max-width: 320px) {
+            .grid {
+                grid-template-columns: repeat(4, 20vw);
+                grid-template-rows: repeat(8, 20vw);
+                grid-gap: 3px;
+            }
+        }
+        /* Larger screens */
+        @media (min-width: 600px) {
+            .grid {
+                grid-template-columns: repeat(4, 75px); /* Fixed size for desktop */
+                grid-template-rows: repeat(8, 75px);
+                grid-gap: 8px;
+            }
         }
     </style>
 </head>
@@ -70,7 +97,7 @@
         let matchedPairs = 0;
         let moves = 0;
 
-        // Array of 18 image URLs (each appears twice, 36 total)
+        // Array of 16 image URLs (each appears twice, 32 total)
         const imageUrls = [
             'https://images.unsplash.com/photo-1600585154340-be6161a56a0c', // House
             'https://images.unsplash.com/photo-1600585154340-be6161a56a0c',
@@ -103,11 +130,7 @@
             'https://images.unsplash.com/photo-1503437313881-503a91226402', // City
             'https://images.unsplash.com/photo-1503437313881-503a91226402',
             'https://images.unsplash.com/photo-1490730141103-6cac27aaab94', // Sunset
-            'https://images.unsplash.com/photo-1490730141103-6cac27aaab94',
-            'https://images.unsplash.com/photo-1504208434309-cb69f4fe52b7', // Moon
-            'https://images.unsplash.com/photo-1504208434309-cb69f4fe52b7',
-            'https://images.unsplash.com/photo-1518495973541-977459b9c8a2', // Bridge
-            'https://images.unsplash.com/photo-1518495973541-977459b9c8a2'
+            'https://images.unsplash.com/photo-1490730141103-6cac27aaab94'
         ];
 
         // Initialize game
@@ -124,7 +147,7 @@
                 const card = document.createElement('div');
                 card.classList.add('card');
                 card.dataset.index = index;
-                card.dataset.value = url; // Use URL as the value to match
+                card.dataset.value = url;
 
                 const img = document.createElement('img');
                 img.src = url;
@@ -158,7 +181,7 @@
                 card2.classList.add('matched');
                 matchedPairs++;
                 flippedCards = [];
-                if (matchedPairs === 18) { // 18 pairs for 6x6
+                if (matchedPairs === 16) {
                     setTimeout(() => alert('You won! Moves: ' + moves), 500);
                 }
             } else {
