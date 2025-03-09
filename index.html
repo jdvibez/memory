@@ -103,7 +103,11 @@
             'https://images.unsplash.com/photo-1503437313881-503a91226402', // City
             'https://images.unsplash.com/photo-1503437313881-503a91226402',
             'https://images.unsplash.com/photo-1490730141103-6cac27aaab94', // Sunset
-            'https://images.unsplash.com/photo-1490730141103-6cac27aaab94'
+            'https://images.unsplash.com/photo-1490730141103-6cac27aaab94',
+            'https://images.unsplash.com/photo-1504208434309-cb69f4fe52b7', // Moon
+            'https://images.unsplash.com/photo-1504208434309-cb69f4fe52b7',
+            'https://images.unsplash.com/photo-1518495973541-977459b9c8a2', // Bridge
+            'https://images.unsplash.com/photo-1518495973541-977459b9c8a2'
         ];
 
         // Initialize game
@@ -154,7 +158,7 @@
                 card2.classList.add('matched');
                 matchedPairs++;
                 flippedCards = [];
-                if (matchedPairs === 18) { // Updated to 18 pairs
+                if (matchedPairs === 18) { // 18 pairs for 6x6
                     setTimeout(() => alert('You won! Moves: ' + moves), 500);
                 }
             } else {
