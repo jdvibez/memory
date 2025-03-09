@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Game 8x4 - Fully Responsive</title>
+    <title>Memory Game 8x4 - 75px Square Tiles</title>
     <style>
         body {
             display: flex;
@@ -17,22 +17,21 @@
         .game-container {
             text-align: center;
             padding: 15px;
-            width: 90%; /* Flexible width for all devices */
-            max-width: 400px; /* Soft cap for very wide screens */
+            width: 90%; /* Flexible width */
+            max-width: 320px; /* Matches 4 x 75px + 3 x 5px gaps */
             box-sizing: border-box;
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* Equal fractions of available width */
-            grid-template-rows: repeat(8, auto); /* Auto height based on content */
+            grid-template-columns: repeat(4, 75px); /* Fixed 75px columns */
+            grid-template-rows: repeat(8, 75px); /* Fixed 75px rows */
             grid-gap: 5px;
             margin: 20px auto 0; /* Center the grid */
-            width: 100%; /* Full width of container */
+            width: fit-content; /* Only take up space needed */
         }
         .card {
-            width: 100%;
-            height: 0;
-            padding-bottom: 100%; /* Maintain 1:1 aspect ratio */
+            width: 75px; /* Fixed width */
+            height: 75px; /* Fixed height */
             background-color: #333;
             display: flex;
             justify-content: center;
@@ -73,12 +72,15 @@
             .grid {
                 grid-gap: 3px;
             }
-        }
-        /* Larger screens (optional refinement) */
-        @media (min-width: 600px) {
             .card {
-                min-width: 75px;
-                min-height: 75px;
+                width: 70px; /* Slightly smaller on tiny screens */
+                height: 70px;
+            }
+        }
+        /* Larger screens */
+        @media (min-width: 600px) {
+            .game-container {
+                max-width: 340px; /* 4 x 75px + 3 x 5px, with padding */
             }
         }
     </style>
