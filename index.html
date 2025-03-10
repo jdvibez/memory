@@ -1,31 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1K8SKJE4MY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-1K8SKJE4MY');
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Game 4x4 with Images</title>
+    <title>MEMEory Game 8x4 - 75px Square Tiles</title>
     <style>
         body {
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start;
+            min-height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
         .game-container {
             text-align: center;
+            padding: 15px;
+            width: 90%; /* Flexible width */
+            max-width: 320px; /* Matches 4 x 75px + 3 x 5px gaps */
+            box-sizing: border-box;
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(4, 100px);
-            grid-gap: 10px;
-            margin-top: 20px;
+            grid-template-columns: repeat(4, 75px); /* Fixed 75px columns */
+            grid-template-rows: repeat(8, 75px); /* Fixed 75px rows */
+            grid-gap: 5px;
+            margin: 20px auto 0; /* Center the grid */
+            width: fit-content; /* Only take up space needed */
         }
         .card {
-            width: 100px;
-            height: 100px;
+            width: 75px; /* Fixed width */
+            height: 75px; /* Fixed height */
             background-color: #333;
             display: flex;
             justify-content: center;
@@ -34,12 +49,18 @@
             transition: transform 0.3s;
             transform-style: preserve-3d;
             position: relative;
+            border-radius: 5px;
+            overflow: hidden; /* Ensure image stays within bounds */
         }
         .card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: none;
+            border-radius: 5px;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
         .card.flipped img {
             display: block;
@@ -51,6 +72,25 @@
         .card.matched {
             background-color: #fff;
             transform: rotateY(180deg);
+        }
+        .card:active {
+            transform: scale(0.95);
+        }
+        /* Adjust for very small screens */
+        @media (max-width: 320px) {
+            .grid {
+                grid-gap: 3px;
+            }
+            .card {
+                width: 70px; /* Slightly smaller on tiny screens */
+                height: 70px;
+            }
+        }
+        /* Larger screens */
+        @media (min-width: 600px) {
+            .game-container {
+                max-width: 340px; /* 4 x 75px + 3 x 5px, with padding */
+            }
         }
     </style>
 </head>
@@ -70,41 +110,56 @@
         let matchedPairs = 0;
         let moves = 0;
 
-        // Array of 8 image URLs (each appears twice)
+        // Array of 16 image URLs (each appears twice, 32 total)
         const imageUrls = [
-            'https://imgur.com/xvUh0Ml.png', // House
             'https://imgur.com/xvUh0Ml.png',
-            'https://imgur.com/3SWh7BG.png', // Cat
+            'https://imgur.com/xvUh0Ml.png',
             'https://imgur.com/3SWh7BG.png',
-            'https://imgur.com/PjQjA9V.png', // Dog
-            'https://imgur.com/PjQjA9V.png',
-            'https://imgur.com/vBfiCoi.png', // Flower
-            'https://imgur.com/vBfiCoi.png',
-            'https://imgur.com/aMTlick.png', // Mountain
+            'https://imgur.com/3SWh7BG.png',
             'https://imgur.com/aMTlick.png',
-            'https://imgur.com/fUaMDOe.png', // Lake
-            'https://imgur.com/fUaMDOe.png',
-            'https://imgur.com/VaP1se5.png', // Bird
+            'https://imgur.com/aMTlick.png',
             'https://imgur.com/VaP1se5.png',
-            'https://imgur.com/ZNjZwrM.png', // Beach
-            'https://imgur.com/ZNjZwrM.png'
+            'https://imgur.com/VaP1se5.png',
+            'https://imgur.com/we2XMke.png',
+            'https://imgur.com/we2XMke.png',
+            'https://imgur.com/ZNjZwrM.png',
+            'https://imgur.com/ZNjZwrM.png',
+            'https://imgur.com/x0gKn9V.png',
+            'https://imgur.com/x0gKn9V.png',
+            'https://imgur.com/TtYnqoc.png',
+            'https://imgur.com/TtYnqoc.png',
+            'https://imgur.com/qkJfw7i.png',
+            'https://imgur.com/qkJfw7i.png',
+            'https://imgur.com/atWVObF.png',
+            'https://imgur.com/atWVObF.png',
+            'https://imgur.com/AY3Uvo1.png',
+            'https://imgur.com/AY3Uvo1.png',
+            'https://imgur.com/29FdJrD.png',
+            'https://imgur.com/29FdJrD.png',
+            'https://imgur.com/L2Ue0gH.png',
+            'https://imgur.com/L2Ue0gH.png',
+            'https://imgur.com/Siv0WtQ.png',
+            'https://imgur.com/Siv0WtQ.png',
+            'https://imgur.com/xpFlkDc.png',
+            'https://imgur.com/xpFlkDc.png',
+            'https://imgur.com/K68JnAd.png',
+            'https://imgur.com/K68JnAd.png'
         ];
 
         // Initialize game
         function initializeGame() {
-            cards = imageUrls.sort(() => Math.random() - 0.5); // Shuffle array
+            cards = imageUrls.sort(() => Math.random() - 0.5);
             grid.innerHTML = '';
             moves = 0;
             movesDisplay.textContent = moves;
             matchedPairs = 0;
             flippedCards = [];
 
-            // Generate card elements
             cards.forEach((url, index) => {
                 const card = document.createElement('div');
                 card.classList.add('card');
                 card.dataset.index = index;
-                card.dataset.value = url; // Use URL as the value to match
+                card.dataset.value = url;
 
                 const img = document.createElement('img');
                 img.src = url;
@@ -130,7 +185,7 @@
             }
         }
 
-        // Check if flipped cards match
+        // Check if flipped cards match, and show moves with tiered feedback
         function checkMatch() {
             const [card1, card2] = flippedCards;
             if (card1.dataset.value === card2.dataset.value) {
@@ -138,8 +193,16 @@
                 card2.classList.add('matched');
                 matchedPairs++;
                 flippedCards = [];
-                if (matchedPairs === 8) {
-                    setTimeout(() => alert('You won! Moves: ' + moves), 500);
+                if (matchedPairs === 16) {
+                    let message = '';
+                    if (moves === 32) {
+                        message = `${moves} moves - You nailed it!`;
+                    } else if (moves > 32 && moves <= 40) {
+                        message = `${moves} moves - You can do better`;
+                    } else {
+                        message = `${moves} moves - You suck!`;
+                    }
+                    setTimeout(() => alert(message), 500);
                 }
             } else {
                 setTimeout(() => {
